@@ -153,27 +153,31 @@ void setup() {
 }
 
 void loop() {
-  // Vérifie si Python a envoyé quelque chose
-  if (Serial.available() > 0) {
+  // Vérifie si Python a envoyé des données sur le port USB
+  if (DEBUG_SERIAL.available() > 0) {
     
-    // Lit le message jusqu'au caractère de fin de ligne '\n'
-    String message = Serial.readStringUntil('\n');
+    // Lit le message jusqu'à '\n'
+    //String message = DEBUG_SERIAL.readStringUntil('\n');
     
-    float angle1, angle2, angle3;
-
-    // Décortique la chaîne "val1,val2,val3"
-    // sscanf renvoie le nombre de valeurs trouvées (on en veut 3)
-    if (sscanf(message.c_str(), "%f,%f,%f", &angle1, &angle2, &angle3) == 3) {
+    float a1, a2, a3;
+    
+    a1 = DEBUG_SERIAL.parseFloat();
+    a2 = DEBUG_SERIAL.parseFloat();
+    a3 = DEBUG_SERIAL.parseFloat();
+    // Extraction des 3 valeurs
+    //if (sscanf(message.c_str(), "%f,%f,%f", &a1, &a2, &a3) >= 0) {
       
-      // Envoie les ordres aux moteurs
-      angle1 = (180*angle1)/PI;
-      angle2 = (180*angle2)/PI;
-      angle3 = (180*angle3)/PI;
+      // Conversion Radian -> Degré (si Python envoie des Radians)
+      float deg1 = (a1 * 180.0) / PI;
+      float deg2 = (a2 * 180.0) / PI;
+      float deg3 = (a3 * 180.0) / PI;
 
-      Set_target_angle(angle1, DXL_ID_DH2020, angle2,DXL_ID_DH2028, angle3, DXL_ID_DH1007);
+      // Envoi immédiat aux moteurs
+      dxl.setGoalPosition(DXL_ID_DH1007, deg1, UNIT_DEGREE);
+      dxl.setGoalPosition(DXL_ID_DH2028, deg2, UNIT_DEGREE);
+      dxl.setGoalPosition(DXL_ID_DH2020, deg3, UNIT_DEGREE);
 
-      // Optionnel : confirme au PC que c'est reçu
-      Serial.println("Positions OK");
+      // Réponse rapide pour confirmer la réception
+      DEBUG_SERIAL.println(String(a1)); 
     }
   }
-}
