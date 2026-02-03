@@ -65,13 +65,6 @@ cap = cv.VideoCapture(0,cv.CAP_V4L2)
 cv.namedWindow(window_capture_name)
 cv.namedWindow(window_detection_name)
 
-cv.createTrackbar(low_H_name, window_detection_name, low_H, max_value_H, on_low_H_thresh_trackbar)
-cv.createTrackbar(high_H_name, window_detection_name, high_H, max_value, on_high_H_thresh_trackbar)
-cv.createTrackbar(low_S_name, window_detection_name, low_S, max_value, on_low_S_thresh_trackbar)
-cv.createTrackbar(high_S_name, window_detection_name, high_S, max_value, on_high_S_thresh_trackbar)
-cv.createTrackbar(low_V_name, window_detection_name, low_V, max_value, on_low_V_thresh_trackbar)
-cv.createTrackbar(high_V_name, window_detection_name, high_V, max_value, on_high_V_thresh_trackbar)
-
 while True:
     ret, frame = cap.read()
     #print (ret, frame)
@@ -87,18 +80,24 @@ while True:
     ret, thresh = cv.threshold(vid_gray, 150, 255, cv.THRESH_BINARY)
 
     #detect the contours on the binary image using cv.CHAINE_APPROX_NONE
-    contours, hierrarchy = cv.findContours( image=thresh, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
+    contours, hierrarchy = cv.findContours( image=thresh, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_SIMPLE)
+    contours1, hierrarchy1 = cv.findContours(image=thresh, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
 
     #draw contours on the original vid
-    vid_copy = frame.copy()
-    cv.drawContours(image=vid_copy, contours=contours, contourIdx=-1,color=(0, 255, 0), thickness=2, lineType=cv.LINE_AA)
+    vid_copy_none = frame.copy()
+    vid_copy_simple = frame.copy()
+
+    cv.drawContours(image=vid_copy_none, contours=contours, contourIdx=-1,color=(0, 255, 0), thickness=2, lineType=cv.LINE_AA)
+    cv.drawContours(image=vid_copy_simple, contours=contours, contourIdx=-1,color=(0, 255, 0), thickness=2, lineType=cv.LINE_AA)
 
     #creation de masques locaux
 
     #cv.imshow("filtreHSV", frame_HSV)
     cv.imshow(window_capture_name, frame)
     cv.imshow(window_detection_name, thresh)
-    cv.imshow("contours", vid_copy)
+    cv.imshow("detection contour none", vid_copy_none)
+    cv.imshow("detection contour simple", vid_copy_simple )
+
     key = cv.waitKey(30)
     if key == ord('q') or key == 27:
         break
@@ -108,3 +107,10 @@ while True:
 
 cap.release()
 cv.destroyAllWindows()
+cv.createTrackbar(low_H_name, window_detection_name, low_H, max_value_H, on_low_H_thresh_trackbar)
+cv.createTrackbar(high_H_name, window_detection_name, high_H, max_value, on_high_H_thresh_trackbar)
+cv.createTrackbar(low_S_name, window_detection_name, low_S, max_value, on_low_S_thresh_trackbar)
+cv.createTrackbar(high_S_name, window_detection_name, high_S, max_value, on_high_S_thresh_trackbar)
+cv.createTrackbar(low_V_name, window_detection_name, low_V, max_value, on_low_V_thresh_trackbar)
+cv.createTrackbar(high_V_name, window_detection_name, high_V, max_value, on_high_V_thresh_trackbar)
+

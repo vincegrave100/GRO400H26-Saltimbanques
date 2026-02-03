@@ -38,7 +38,7 @@ while True:
     contours2, hierarchy2 = cv.findContours(image=green, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
 
     vid_cont_green = frame.copy()
-    cv.drawContours(image=vid_cont_green, contours=contours1, contourIdx=-1, color=(0, 255, 0), thickness=2,
+    cv.drawContours(image=vid_cont_green, contours=contours2, contourIdx=-1, color=(0, 255, 0), thickness=2,
                     lineType=cv.LINE_AA)
     # show result
 
@@ -48,7 +48,7 @@ while True:
     contours3, hierarchy3 = cv.findContours(image=red, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
 
     vid_cont_red = frame.copy()
-    cv.drawContours(image=vid_cont_red, contours=contours1, contourIdx=-1, color=(0, 255, 0), thickness=2,
+    cv.drawContours(image=vid_cont_red, contours=contours3, contourIdx=-1, color=(0, 255, 0), thickness=2,
                     lineType=cv.LINE_AA)
     # show result
 
