@@ -13,13 +13,13 @@ while True:
     ret, frame = cap.read()
     #print (ret, frame)
     if not ret:
-        print("Errreur camera")
+        print("Erreur camera")
         break
     #blur channel
     blur = cv.GaussianBlur(frame, (3, 3), 0)
 
     #separation cannaux BGR
-    blue, green, red =cv.split(frame)
+    blue, green, red =cv.split(blur)
     cv.imshow("blue", blue)
     cv.imshow("green", green)
     cv.imshow("red", red)
