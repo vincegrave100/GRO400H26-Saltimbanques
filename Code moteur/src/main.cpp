@@ -83,10 +83,11 @@ void setup() {
   
   // Use UART port of DYNAMIXEL Shield to debug.
   DEBUG_SERIAL.begin(115200);
-  while(!DEBUG_SERIAL); // On attend que la communication série pour les messages soit prête.
+  //while(!DEBUG_SERIAL); // On attend que la communication série pour les messages soit prête.
 
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
   dxl.begin(57600);
+
   if (dxl.getLastLibErrCode()) {
     DEBUG_SERIAL.println("Could not init serial port!");
     DEBUG_SERIAL.print("Last error code: ");
@@ -146,33 +147,33 @@ void setup() {
   DEBUG_SERIAL.println("Setup done.");
   DEBUG_SERIAL.print("Last error code: ");
   DEBUG_SERIAL.println(dxl.getLastLibErrCode());
+  dxl.setGoalPosition(DXL_ID_DH2020, 0, UNIT_DEGREE);
+  dxl.setGoalPosition(DXL_ID_DH2028, 0, UNIT_DEGREE);
+  dxl.setGoalPosition(DXL_ID_DH1007, 0, UNIT_DEGREE);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  
-  // Please refer to e-Manual(http://emanual.robotis.com/docs/en/parts/interface/dynamixel_shield/) for available range of value. 
-  // Set Goal Position in RAW value
-  
+  // Vérifie si Python a envoyé quelque chose
+  if (Serial.available() > 0) {
+    
+    // Lit le message jusqu'au caractère de fin de ligne '\n'
+    String message = Serial.readStringUntil('\n');
+    
+    float angle1, angle2, angle3;
 
-  
-  
-  dxl.setGoalPosition(DXL_ID_DH1007, 1000);
-  dxl.setGoalPosition(DXL_ID_DH2028, 1000);
-  dxl.setGoalPosition(DXL_ID_DH2020, 1000);
+    // Décortique la chaîne "val1,val2,val3"
+    // sscanf renvoie le nombre de valeurs trouvées (on en veut 3)
+    if (sscanf(message.c_str(), "%f,%f,%f", &angle1, &angle2, &angle3) == 3) {
+      
+      // Envoie les ordres aux moteurs
+      angle1 = (180*angle1)/PI;
+      angle2 = (180*angle2)/PI;
+      angle3 = (180*angle3)/PI;
 
-  delay(5000);
-  /*int i_present_position = 0;
+      Set_target_angle(angle1, DXL_ID_DH2020, angle2,DXL_ID_DH2028, angle3, DXL_ID_DH1007);
 
-  while (abs(1000 - i_present_position) > 10)
-  {
-    i_present_position = dxl.getPresentPosition(DXL_ID_DH2020);
+      // Optionnel : confirme au PC que c'est reçu
+      Serial.println("Positions OK");
+    }
   }
-  delay(2000);*/
-  float M1  = 0.0;
-  float M2  = 180.0;
-  float M3  = 64.0;
-
-  // Set Goal Position in DEGREE value
-  Set_target_angle(M1, DXL_ID_DH1007, M2, DXL_ID_DH2028, M3, DXL_ID_DH2020);
 }
