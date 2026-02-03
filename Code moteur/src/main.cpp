@@ -178,6 +178,6 @@ void loop() {
       dxl.setGoalPosition(DXL_ID_DH2020, deg3, UNIT_DEGREE);
 
       // Réponse rapide pour confirmer la réception
-      DEBUG_SERIAL.println(String(a1)); 
+      DEBUG_SERIAL.println("ACK"); 
     }
   }
