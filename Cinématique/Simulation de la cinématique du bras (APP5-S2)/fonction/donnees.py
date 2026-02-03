@@ -1,3 +1,5 @@
+# donnees.py
+
 class Donnees:
     # longueurs (m)
     L1 = 0.20
@@ -14,8 +16,8 @@ class Donnees:
 
     # Orientation de l'outil: perpendiculaire au sol (plan XY)
     # -1 = pointe vers le sol (-z), +1 = pointe vers le haut (+z)
-    sens_outil = 1
+    sens_outil = -1
 
-    # Choix de configuration (IK) :
-    # "bas" = coude bas (elbow-down), "haut" = coude haut (elbow-up)
+    # Configuration du coude
+    # "bas" = elbow-down, "haut" = elbow-up
     config_coude = "bas"
